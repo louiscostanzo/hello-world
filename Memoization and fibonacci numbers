@@ -1,0 +1,42 @@
+
+import timeit
+import time
+def memoize(fn):
+  cached = {}
+  def store(n):
+    if n not in cached:
+      cached[n] = fn(n)
+    return cached[n]
+  return store
+# all this does is check values against the dictionary 'cached' and store them
+# it returns the store function, and takes a function as an argument
+
+def slow_fib (n):
+  if n <= 1:
+    return n
+  else:
+    return slow_fib(n-1) + slow_fib(n-2)
+
+def slow_fib_base (n):
+  if n <= 1:
+    return n
+  else:
+    return slow_fib_base(n-1) + slow_fib_base(n-2)
+
+# a a normal, recursive, fibonacci number finder
+# adding a general memoize functions
+
+slow_fib = memoize(slow_fib)
+# now, calling slow_fib gives us the memoized function
+# python can call a decorated functio with @decorator on the line above
+
+x = time.perf_counter()
+print(slow_fib(32))
+print(time.perf_counter()-x)
+x = time.perf_counter()
+print(slow_fib_base(32))
+print(time.perf_counter()-x)
+x = 0
+
+# so, the timer shows that slow_fib - now imbued with the power of memoization
+# is faster by far than the base function
